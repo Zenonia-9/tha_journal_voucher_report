@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_journal_voucher_print_wizard_form" model="ir.ui.view">
+        <field name="name">journal.voucher.print.wizard.form</field>
+        <field name="model">journal.voucher.print.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Print Voucher">
+                <field name="currency_id" invisible="1"/>
+                <group>
+                    <field name="move_id"/>
+                    <field name="company_id"/>
+                    <field name="journal_id"/>
+                    <field name="date"/>
+                    <label for="total_debit"/>
+                    <div class="o_row">
+                        <field name="total_debit"/>
+                        <field name="currency_id" groups="base.group_multi_currency"/>
+                    </div>
+                    <field name="paper_format" widget="radio" options="{'horizontal': True}"/>
+                </group>
+                <footer>
+                    <button name="action_print"
+                            string="Print"
+                            type="object"
+                            class="oe_highlight"
+                            data-hotkey="q"/>
+                    <button string="Cancel"
+                            special="cancel"
+                            class="btn-secondary"
+                            data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
+

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="journal_voucher_layout_a4">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+
+        <div t-attf-class="header o_company_#{company.id}_layout">
+            <style>
+                .journal-voucher-header {
+                    width: 100%;
+                    overflow: hidden;
+                }
+
+                .journal-voucher-logo-block {
+                    float: left;
+                    width: 45%;
+                    text-align: left;
+                }
+
+                .journal-voucher-address-block {
+                    float: right;
+                    width: 55%;
+                    text-align: right;
+                    font-size: 12px;
+                    line-height: 1.25;
+                    white-space: nowrap;
+                    padding-right: 6mm;
+                }
+
+                .journal-voucher-address-block div,
+                .journal-voucher-address-block span {
+                    white-space: nowrap !important;
+                }
+
+                .journal-voucher-logo {
+                    max-height: 80px;
+                }
+
+                .journal-voucher-clear {
+                    clear: both;
+                }
+            </style>
+
+            <t t-set="partner" t-value="company.partner_id"/>
+
+            <div class="journal-voucher-header">
+                <div class="journal-voucher-logo-block">
+                    <img t-if="company.logo"
+                         class="journal-voucher-logo"
+                         t-att-src="image_data_uri(company.logo)"
+                         alt="Logo"/>
+                </div>
+
+                <div class="journal-voucher-address-block">
+                    <div t-if="company.name">
+                        <span t-esc="company.name"/>
+                    </div>
+                    <div t-if="partner.street">
+                        <span t-esc="partner.street"/>
+                    </div>
+                    <div t-if="partner.street2">
+                        <span t-esc="partner.street2"/>
+                    </div>
+                    <div t-if="partner.city or partner.state_id">
+                        <span t-if="partner.city" t-esc="partner.city"/>
+                        <span t-if="partner.city and partner.state_id"> </span>
+                        <span t-if="partner.state_id" t-esc="partner.state_id.name"/>
+                    </div>
+                    <div t-if="partner.zip">
+                        <span t-esc="partner.zip"/>
+                    </div>
+                    <div t-if="partner.country_id">
+                        <span t-esc="partner.country_id.name"/>
+                    </div>
+                </div>
+
+                <div class="journal-voucher-clear"/>
+            </div>
+        </div>
+
+        <div t-attf-class="article o_report_layout_standard o_table_standard o_company_#{company.id}_layout"
+             t-att-data-oe-model="o and o._name"
+             t-att-data-oe-id="o and o.id"
+             t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <t t-out="0"/>
+        </div>
+
+        <div t-attf-class="footer o_company_#{company.id}_layout">
+            <div class="o_footer_content"/>
+        </div>
+    </template>
+
+    <template id="journal_voucher_layout_a5">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+
+        <div t-attf-class="header o_company_#{company.id}_layout">
+            <style>
+                .journal-voucher-header {
+                    width: 100%;
+                    overflow: hidden;
+                }
+
+                .journal-voucher-logo-block {
+                    float: left;
+                    width: 45%;
+                    text-align: left;
+                }
+
+                .journal-voucher-address-block {
+                    float: right;
+                    width: 55%;
+                    text-align: right;
+                    font-size: 11px;
+                    line-height: 1.25;
+                    white-space: nowrap;
+                    padding-right: 6mm;
+                }
+
+                .journal-voucher-address-block div,
+                .journal-voucher-address-block span {
+                    white-space: nowrap !important;
+                }
+
+                .journal-voucher-logo {
+                    max-height: 65px;
+                }
+
+                .journal-voucher-clear {
+                    clear: both;
+                }
+            </style>
+
+            <t t-set="partner" t-value="company.partner_id"/>
+
+            <div class="journal-voucher-header">
+                <div class="journal-voucher-logo-block">
+                    <img t-if="company.logo"
+                         class="journal-voucher-logo"
+                         t-att-src="image_data_uri(company.logo)"
+                         alt="Logo"/>
+                </div>
+
+                <div class="journal-voucher-address-block">
+                    <div t-if="company.name">
+                        <span t-esc="company.name"/>
+                    </div>
+                    <div t-if="partner.street">
+                        <span t-esc="partner.street"/>
+                    </div>
+                    <div t-if="partner.street2">
+                        <span t-esc="partner.street2"/>
+                    </div>
+                    <div t-if="partner.city or partner.state_id">
+                        <span t-if="partner.city" t-esc="partner.city"/>
+                        <span t-if="partner.city and partner.state_id"> </span>
+                        <span t-if="partner.state_id" t-esc="partner.state_id.name"/>
+                    </div>
+                    <div t-if="partner.zip">
+                        <span t-esc="partner.zip"/>
+                    </div>
+                    <div t-if="partner.country_id">
+                        <span t-esc="partner.country_id.name"/>
+                    </div>
+                </div>
+
+                <div class="journal-voucher-clear"/>
+            </div>
+        </div>
+
+        <div t-attf-class="article o_report_layout_standard o_table_standard o_company_#{company.id}_layout"
+             t-att-data-oe-model="o and o._name"
+             t-att-data-oe-id="o and o.id"
+             t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <t t-out="0"/>
+        </div>
+
+        <div t-attf-class="footer o_company_#{company.id}_layout">
+            <div class="o_footer_content"/>
+        </div>
+    </template>
+</odoo>
+

@@ -1,0 +1,26 @@
+{
+    "name": "THA Journal Voucher Report",
+    "summary": "Print journal vouchers from journal entries",
+    "version": "19.0.1.0.0",
+    "category": "Accounting",
+    "author": "Thein Htoo Aung",
+    "license": "LGPL-3",
+    "depends": [
+        "account",
+        "web",
+    ],
+    "data": [
+        "security/ir.model.access.csv",
+        "report/paperformat.xml",
+        "report/journal_voucher_layout.xml",
+        "report/journal_voucher.xml",
+        "report/jounal_voucher_a5.xml",
+        "report/journal_voucher_report.xml",
+        "wizard/journal_voucher_print_wizard_views.xml",
+        "views/account_move_views.xml",
+    ],
+    "installable": True,
+    "application": False,
+    "auto_install": False,
+}
+

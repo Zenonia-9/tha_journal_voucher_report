@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="journal_voucher_a5">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+                <t t-call="tha_jounal_voucher_report.journal_voucher_layout_a5">
+                    <t t-set="lines" t-value="o.line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_subsection', 'line_note'))"/>
+
+                    <style>
+                        @page {
+                            size: A5 landscape;
+                        }
+
+                        .page {
+                            font-size: 12px;
+                        }
+
+                        .compact-table td,
+                        .compact-table th {
+                            line-height: 1.5 !important;
+                            vertical-align: middle;
+                            padding: 2px 5px !important;
+                        }
+
+                        .compact-table tr {
+                            height: auto !important;
+                        }
+                    </style>
+
+                    <div class="page" style="font-size: 12px;">
+                        <div class="text-center mb-4">
+                            <h4 style="text-transform: uppercase; font-weight: bold;">Journal Voucher</h4>
+                        </div>
+
+                        <table class="table table-borderless compact-table" style="width: 100%;">
+                            <thead>
+                                <tr class="bg-light text-center" style="border-top: 1px solid black; border-bottom: 1px solid black;">
+                                    <th class="text-start">No.</th>
+                                    <th class="text-start text-nowrap">Date</th>
+                                    <th class="text-start">JV No.</th>
+                                    <th class="text-start">Ref.</th>
+                                    <th class="text-start">GL Code</th>
+                                    <th class="text-start">GL Name</th>
+                                    <th class="text-start">Particular</th>
+                                    <th class="text-start">PC/CC</th>
+                                    <th class="text-end">Debit</th>
+                                    <th class="text-end">Credit</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <t t-set="seq_no" t-value="1"/>
+
+                                <t t-foreach="lines" t-as="line">
+                                    <tr>
+                                        <td class="text-center">
+                                            <span t-esc="seq_no"/>
+                                            <t t-set="seq_no" t-value="seq_no + 1"/>
+                                        </td>
+
+                                        <td class="text-nowrap">
+                                            <span t-if="line_first" t-field="o.date" t-options="{'widget': 'date', 'format': 'dd/MM/yyyy'}"/>
+                                        </td>
+                                        <td class="text-wrap">
+                                            <span t-if="line_first" t-field="o.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-if="line_first" t-field="o.ref"/>
+                                        </td>
+
+                                        <td>
+                                            <span t-field="line.account_id.code"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="line.account_id.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="line.name"/>
+                                        </td>
+
+                                        <td>
+                                            <t t-if="line.analytic_distribution">
+                                                <t t-set="analytic_names" t-value="[]"/>
+                                                <t t-foreach="line.analytic_distribution.keys()" t-as="analytic_key">
+                                                    <t t-foreach="str(analytic_key).split(',')" t-as="analytic_id">
+                                                        <t t-if="analytic_id">
+                                                            <t t-set="analytic_account" t-value="line.env['account.analytic.account'].browse(int(analytic_id))"/>
+                                                            <t t-if="analytic_account.exists() and analytic_account.name not in analytic_names">
+                                                                <t t-set="analytic_names" t-value="analytic_names + [analytic_account.name]"/>
+                                                            </t>
+                                                        </t>
+                                                    </t>
+                                                </t>
+                                                <span t-esc="', '.join(analytic_names)"/>
+                                            </t>
+                                        </td>
+
+                                        <td class="text-end">
+                                            <span t-if="line.debit &gt; 0" t-field="line.debit" t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <span t-if="line.credit &gt; 0" t-field="line.credit" t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
+                                        </td>
+                                    </tr>
+                                </t>
+
+                                <tr t-if="o.narration" style="border-bottom: 1px solid black;">
+                                    <td colspan="2" class="small" style="padding-left: 50px; font-style: italic;">
+                                        <strong>Narration:</strong>
+                                    </td>
+                                    <td colspan="8" class="small" style="font-style: italic;">
+                                        <span t-esc="o.narration"/>
+                                    </td>
+                                </tr>
+
+                                <tr class="border-black">
+                                    <td colspan="8" class="text-end">
+                                        <strong>GRAND TOTAL</strong>
+                                    </td>
+                                    <td class="text-end" style="border-top: 2px solid black !important; border-bottom: 2px double black;">
+                                        <strong>
+                                            <span t-esc="sum(lines.mapped('debit'))" t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
+                                        </strong>
+                                    </td>
+                                    <td class="text-end" style="border-top: 2px solid black !important; border-bottom: 2px double black;">
+                                        <strong>
+                                            <span t-esc="sum(lines.mapped('credit'))" t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="mt-2" style="page-break-inside: avoid;">
+                            <div class="row text-center">
+                                <div class="col-4"><strong>Approved By</strong></div>
+                                <div class="col-4"><strong>Confirmed By</strong></div>
+                                <div class="col-4"><strong>Prepared By</strong></div>
+                            </div>
+
+                            <div class="row mt-3 text-center">
+                                <t t-foreach="range(3)" t-as="x">
+                                    <div class="col-4 px-4">
+                                        <div style="border-bottom: 1px dotted black; height: 15px;"/>
+                                        <div style="border-bottom: 1px dotted black; height: 15px; margin-top: 15px;"/>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

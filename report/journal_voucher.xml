@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="journal_voucher">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+                <t t-call="tha_jounal_voucher_report.journal_voucher_layout_a4">
+                    <t t-set="lines" t-value="o.line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_subsection', 'line_note'))"/>
+
+                    <style>
+                        @page {
+                            size: A4 portrait;
+                        }
+
+                        .page {
+                            font-size: 12px;
+                        }
+
+                        .compact-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+
+                        .compact-table th {
+                            border-top: 1px solid black;
+                            border-bottom: 1px solid black;
+                            padding: 5px 5px !important;
+                            line-height: 1.4 !important;
+                            vertical-align: middle;
+                            font-weight: bold;
+                        }
+
+                        .compact-table td {
+                            padding: 4px 5px !important;
+                            line-height: 1.5 !important;
+                            vertical-align: top;
+                            border-bottom: 1px solid #eeeeee;
+                        }
+
+                        .text-start {
+                            text-align: left;
+                        }
+
+                        .text-center {
+                            text-align: center;
+                        }
+
+                        .text-end {
+                            text-align: right;
+                        }
+
+                        .text-nowrap {
+                            white-space: nowrap;
+                        }
+
+                        .small {
+                            font-size: 11px;
+                        }
+                    </style>
+
+                    <div class="page">
+                        <div class="text-center" style="margin-bottom: 25px;">
+                            <h3 style="text-transform: uppercase; font-weight: bold; font-size: 24px;">
+                                Journal Voucher
+                            </h3>
+                        </div>
+
+                        <table class="compact-table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">No.</th>
+                                    <th class="text-start text-nowrap">Date</th>
+                                    <th class="text-start text-nowrap">JV No.</th>
+                                    <th class="text-start">Ref.</th>
+                                    <th class="text-start">GL<br/>Code</th>
+                                    <th class="text-start">GL Name</th>
+                                    <th class="text-start">Particular</th>
+                                    <th class="text-start">PC/CC</th>
+                                    <th class="text-end">Debit</th>
+                                    <th class="text-end">Credit</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <t t-set="seq_no" t-value="1"/>
+
+                                <t t-foreach="lines" t-as="line">
+                                    <tr>
+                                        <td class="text-center">
+                                            <span t-esc="seq_no"/>
+                                            <t t-set="seq_no" t-value="seq_no + 1"/>
+                                        </td>
+
+                                        <td class="text-nowrap">
+                                            <span t-field="o.date" t-options="{'widget': 'date', 'format': 'dd/MM/yyyy'}"/>
+                                        </td>
+
+                                        <td class="text-nowrap">
+                                            <span t-field="o.name"/>
+                                        </td>
+
+                                        <td>
+                                            <span t-field="o.ref"/>
+                                        </td>
+
+                                        <td>
+                                            <span t-field="line.account_id.code"/>
+                                        </td>
+
+                                        <td>
+                                            <span t-field="line.account_id.name"/>
+                                        </td>
+
+                                        <td>
+                                            <span t-field="line.name"/>
+                                        </td>
+
+                                        <td>
+                                            <t t-if="line.analytic_distribution">
+                                                <t t-set="analytic_names" t-value="[]"/>
+                                                <t t-foreach="line.analytic_distribution.keys()" t-as="analytic_key">
+                                                    <t t-foreach="str(analytic_key).split(',')" t-as="analytic_id">
+                                                        <t t-if="analytic_id">
+                                                            <t t-set="analytic_account" t-value="line.env['account.analytic.account'].browse(int(analytic_id))"/>
+                                                            <t t-if="analytic_account.exists() and analytic_account.name not in analytic_names">
+                                                                <t t-set="analytic_names" t-value="analytic_names + [analytic_account.name]"/>
+                                                            </t>
+                                                        </t>
+                                                    </t>
+                                                </t>
+                                                <span t-esc="', '.join(analytic_names)"/>
+                                            </t>
+                                        </td>
+
+                                        <td class="text-end text-nowrap">
+                                            <span t-if="line.debit &gt; 0" t-field="line.debit" t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
+                                        </td>
+
+                                        <td class="text-end text-nowrap">
+                                            <span t-if="line.credit &gt; 0" t-field="line.credit" t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
+                                        </td>
+                                    </tr>
+                                </t>
+
+                                <tr t-if="o.narration">
+                                    <td colspan="2" class="small" style="padding-left: 30px; font-style: italic; border-bottom: 1px solid black;">
+                                        <strong>Narration:</strong>
+                                    </td>
+                                    <td colspan="8" class="small" style="font-style: italic; border-bottom: 1px solid black;">
+                                        <span t-esc="o.narration"/>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="8" class="text-end" style="border-bottom: none;">
+                                        <strong>GRAND TOTAL</strong>
+                                    </td>
+                                    <td class="text-end text-nowrap" style="border-top: 2px solid black !important; border-bottom: 2px double black !important;">
+                                        <strong>
+                                            <span t-esc="sum(lines.mapped('debit'))" t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
+                                        </strong>
+                                    </td>
+                                    <td class="text-end text-nowrap" style="border-top: 2px solid black !important; border-bottom: 2px double black !important;">
+                                        <strong>
+                                            <span t-esc="sum(lines.mapped('credit'))" t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div style="margin-top: 35px; page-break-inside: avoid;">
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <strong>Approved By</strong>
+                                </div>
+                                <div class="col-4">
+                                    <strong>Confirmed By</strong>
+                                </div>
+                                <div class="col-4">
+                                    <strong>Prepared By</strong>
+                                </div>
+                            </div>
+
+                            <div class="row text-center" style="margin-top: 25px;">
+                                <div class="col-4 px-4">
+                                    <div style="border-bottom: 1px dotted black; height: 20px;"/>
+                                    <div style="border-bottom: 1px dotted black; height: 20px; margin-top: 20px;"/>
+                                </div>
+                                <div class="col-4 px-4">
+                                    <div style="border-bottom: 1px dotted black; height: 20px;"/>
+                                    <div style="border-bottom: 1px dotted black; height: 20px; margin-top: 20px;"/>
+                                </div>
+                                <div class="col-4 px-4">
+                                    <div style="border-bottom: 1px dotted black; height: 20px;"/>
+                                    <div style="border-bottom: 1px dotted black; height: 20px; margin-top: 20px;"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
+
