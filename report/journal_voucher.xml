@@ -34,7 +34,6 @@
                             padding: 4px 5px !important;
                             line-height: 1.5 !important;
                             vertical-align: top;
-                            border-bottom: 1px solid #eeeeee;
                         }
 
                         .text-start {
