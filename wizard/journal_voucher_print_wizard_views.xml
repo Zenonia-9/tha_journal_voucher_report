@@ -6,11 +6,13 @@
         <field name="arch" type="xml">
             <form string="Print Voucher">
                 <field name="currency_id" invisible="1"/>
+                <field name="move_count" invisible="1"/>
                 <group>
-                    <field name="move_id"/>
-                    <field name="company_id"/>
-                    <field name="journal_id"/>
-                    <field name="date"/>
+                    <field name="move_id" invisible="move_count != 1"/>
+                    <field name="move_ids" widget="many2many_tags" invisible="move_count == 1"/>
+                    <field name="company_id" invisible="move_count != 1"/>
+                    <field name="journal_id" invisible="move_count != 1"/>
+                    <field name="date" invisible="move_count != 1"/>
                     <label for="total_debit"/>
                     <div class="o_row">
                         <field name="total_debit"/>
@@ -33,4 +35,3 @@
         </field>
     </record>
 </odoo>
-

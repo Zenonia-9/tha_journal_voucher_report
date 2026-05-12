@@ -12,6 +12,15 @@ class JournalVoucherPrintWizard(models.TransientModel):
         required=True,
         readonly=True,
     )
+    move_ids = fields.Many2many(
+        "account.move",
+        string="Journal Entries",
+        readonly=True,
+    )
+    move_count = fields.Integer(
+        compute="_compute_move_count",
+        readonly=True,
+    )
     paper_format = fields.Selection(
         selection=[
             ("a4", "A4"),
@@ -47,29 +56,51 @@ class JournalVoucherPrintWizard(models.TransientModel):
         currency_field="currency_id",
     )
 
-    @api.depends("move_id.line_ids.debit")
+    @api.depends("move_ids")
+    def _compute_move_count(self):
+        for wizard in self:
+            wizard.move_count = len(wizard.move_ids)
+
+    @api.depends("move_id.line_ids.debit", "move_ids.line_ids.debit")
     def _compute_total_debit(self):
         for wizard in self:
-            wizard.total_debit = sum(wizard.move_id.line_ids.mapped("debit"))
+            moves = wizard.move_ids or wizard.move_id
+            wizard.total_debit = sum(moves.mapped("line_ids.debit"))
+
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        active_ids = self.env.context.get("active_ids") or []
+        move_id = res.get("move_id") or self.env.context.get("default_move_id")
+        if not active_ids and move_id:
+            active_ids = [move_id]
+
+        # The same wizard is opened from both form and list views.
+        moves = self.env["account.move"].browse(active_ids).exists()
+        if moves:
+            moves = moves._validate_journal_voucher_moves()
+            res.update(
+                {
+                    "move_id": moves[:1].id,
+                    "move_ids": [(6, 0, moves.ids)],
+                }
+            )
+        return res
 
     def action_print(self):
         self.ensure_one()
-        move = self.move_id.exists()
-        if not move:
+        moves = (self.move_ids or self.move_id).exists()
+        if not moves:
             raise UserError(_("Please select a journal entry to print."))
-        if move.move_type != "entry":
-            raise UserError(_("Journal vouchers can only be printed for journal entries."))
-        if move.state != "posted":
-            raise UserError(_("You can only print journal vouchers for posted entries."))
+        moves = moves._validate_journal_voucher_moves()
 
         return self.env.ref(
-            move._get_journal_voucher_report_ref(self.paper_format)
+            moves[:1]._get_journal_voucher_report_ref(self.paper_format)
         ).report_action(
-            move,
+            moves,
             data={
                 "paper_format": self.paper_format,
-                "move_id": move.id,
-                "active_ids": move.ids,
+                "move_id": moves[:1].id,
+                "active_ids": moves.ids,
             },
         )
-

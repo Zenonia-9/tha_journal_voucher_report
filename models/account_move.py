@@ -5,12 +5,19 @@ from odoo.exceptions import UserError
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    def action_open_journal_voucher_print_wizard(self):
-        self.ensure_one()
-        if self.move_type != "entry":
+    def _validate_journal_voucher_moves(self):
+        if not self:
+            raise UserError(_("No journal entries selected."))
+        if any(move.move_type != "entry" for move in self):
             raise UserError(_("Journal vouchers can only be printed for journal entries."))
-        if self.state != "posted":
+        if any(move.state != "posted" for move in self):
             raise UserError(_("You can only print journal vouchers for posted entries."))
+        if len(self.company_id) > 1:
+            raise UserError(_("Selected journal entries must belong to the same company."))
+        return self
+
+    def action_open_journal_voucher_print_wizard(self):
+        moves = self._validate_journal_voucher_moves()
         return {
             "type": "ir.actions.act_window",
             "name": _("Print"),
@@ -18,8 +25,9 @@ class AccountMove(models.Model):
             "view_mode": "form",
             "target": "new",
             "context": {
-                "default_move_id": self.id,
-                "active_ids": self.ids,
+                "default_move_id": moves[:1].id,
+                "default_move_ids": [(6, 0, moves.ids)],
+                "active_ids": moves.ids,
                 "active_model": "account.move",
             },
         }
@@ -34,4 +42,3 @@ class AccountMove(models.Model):
             "a5": "tha_jounal_voucher_report.action_report_jv_a5",
         }
         return report_by_format[paper_format]
-
