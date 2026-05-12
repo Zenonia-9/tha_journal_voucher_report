@@ -1,4 +1,5 @@
-from odoo import api, models
+from odoo import _, api, models
+from odoo.exceptions import UserError
 
 
 def _get_journal_voucher_report_values(report_model, docids, data=None):
@@ -9,7 +10,15 @@ def _get_journal_voucher_report_values(report_model, docids, data=None):
         docids = [data.get("move_id")]
 
     docs = report_model.env["account.move"].browse(docids).exists()
-    docs = docs.filtered(lambda move: move.move_type == "entry")
+
+    # List-view printing sends all selected moves directly to this report.
+    if not docs:
+        raise UserError(_("Please select at least one journal entry to print."))
+    if any(move.move_type != "entry" for move in docs):
+        raise UserError(_("Print JV can only be used for journal entries."))
+    if any(move.state != "posted" for move in docs):
+        raise UserError(_("You can only print posted journal entries."))
+
     company_currency = docs[:1].company_currency_id or report_model.env.company.currency_id
     return {
         "doc_ids": docs.ids,
@@ -40,4 +49,3 @@ class JournalVoucherA5Report(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         return _get_journal_voucher_report_values(self, docids, data=data)
-
