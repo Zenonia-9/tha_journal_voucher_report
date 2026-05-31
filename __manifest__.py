@@ -1,5 +1,5 @@
 {
-    "name": "THA Journal Voucher Report",
+    "name": "Journal Voucher Report",
     "summary": "Print journal vouchers from journal entries",
     "version": "19.0.1.0.0",
     "category": "Accounting",
@@ -23,4 +23,3 @@
     "application": False,
     "auto_install": False,
 }
-
