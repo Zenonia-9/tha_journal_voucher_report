@@ -39,7 +39,7 @@ This module adds a focused journal voucher printing flow for accounting teams th
 ## Module Layout
 
 ```text
-tha_jounal_voucher_report/
+tha_journal_voucher_report/
 |-- models/
 |-- wizard/
 |-- report/

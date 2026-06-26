@@ -14,7 +14,7 @@
         "report/paperformat.xml",
         "report/journal_voucher_layout.xml",
         "report/journal_voucher.xml",
-        "report/jounal_voucher_a5.xml",
+        "report/journal_voucher_a5.xml",
         "report/journal_voucher_report.xml",
         "wizard/journal_voucher_print_wizard_views.xml",
         "views/account_move_views.xml",
