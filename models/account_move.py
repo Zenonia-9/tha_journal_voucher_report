@@ -38,7 +38,7 @@ class AccountMove(models.Model):
             raise UserError(_("Please select a valid paper format."))
 
         report_by_format = {
-            "a4": "tha_jounal_voucher_report.action_report_jv",
-            "a5": "tha_jounal_voucher_report.action_report_jv_a5",
+            "a4": "tha_journal_voucher_report.action_report_jv",
+            "a5": "tha_journal_voucher_report.action_report_jv_a5",
         }
         return report_by_format[paper_format]

@@ -30,7 +30,7 @@ def _get_journal_voucher_report_values(report_model, docids, data=None):
 
 
 class JournalVoucherReport(models.AbstractModel):
-    _name = "report.tha_jounal_voucher_report.journal_voucher"
+    _name = "report.tha_journal_voucher_report.journal_voucher"
     _description = "Journal Voucher"
     _table = "tjvr_report_jv"
     _auto = False
@@ -41,7 +41,7 @@ class JournalVoucherReport(models.AbstractModel):
 
 
 class JournalVoucherA5Report(models.AbstractModel):
-    _name = "report.tha_jounal_voucher_report.journal_voucher_a5"
+    _name = "report.tha_journal_voucher_report.journal_voucher_a5"
     _description = "Journal Voucher A5"
     _table = "tjvr_report_jv_a5"
     _auto = False

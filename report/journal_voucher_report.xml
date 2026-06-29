@@ -4,23 +4,23 @@
         <field name="name">Journal Voucher</field>
         <field name="model">account.move</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">tha_jounal_voucher_report.journal_voucher</field>
-        <field name="report_file">tha_jounal_voucher_report.journal_voucher</field>
-        <field name="paperformat_id" ref="tha_jounal_voucher_report.paperformat_jv_a4"/>
+        <field name="report_name">tha_journal_voucher_report.journal_voucher</field>
+        <field name="report_file">tha_journal_voucher_report.journal_voucher</field>
+        <field name="paperformat_id" ref="tha_journal_voucher_report.paperformat_jv_a4"/>
         <field name="print_report_name">'JV - %s' % (object.name or '')</field>
         <field name="binding_model_id" eval="False"/>
     </record>
 
     <delete model="ir.actions.report"
-            search="[('name', '=', 'Print JV'), ('model', '=', 'account.move'), ('report_name', '=', 'tha_jounal_voucher_report.journal_voucher'), ('binding_model_id.model', '=', 'account.move')]"/>
+            search="[('name', '=', 'Print JV'), ('model', '=', 'account.move'), ('report_name', '=', 'tha_journal_voucher_report.journal_voucher'), ('binding_model_id.model', '=', 'account.move')]"/>
 
     <record id="action_report_jv_a5" model="ir.actions.report">
         <field name="name">Journal Voucher A5</field>
         <field name="model">account.move</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">tha_jounal_voucher_report.journal_voucher_a5</field>
-        <field name="report_file">tha_jounal_voucher_report.journal_voucher_a5</field>
-        <field name="paperformat_id" ref="tha_jounal_voucher_report.paperformat_jv_a5"/>
+        <field name="report_name">tha_journal_voucher_report.journal_voucher_a5</field>
+        <field name="report_file">tha_journal_voucher_report.journal_voucher_a5</field>
+        <field name="paperformat_id" ref="tha_journal_voucher_report.paperformat_jv_a5"/>
         <field name="print_report_name">'JV - %s' % (object.name or '')</field>
         <field name="binding_model_id" eval="False"/>
     </record>
