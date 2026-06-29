@@ -154,7 +154,7 @@
                 }
 
                 .journal-voucher-logo {
-                    max-height: 65px;
+                    max-height: 80px;
                 }
 
                 .journal-voucher-clear {

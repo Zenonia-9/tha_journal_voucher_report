@@ -94,7 +94,7 @@
                                             </td>
 
                                             <td class="text-nowrap">
-                                                <span t-field="journal.date" t-options="{'widget': 'date', 'format': 'dd/MM/yyyy'}"/>
+                                                <span t-esc="journal.date and journal.date.strftime('%d-%b-%Y') or ''"/>
                                             </td>
 
                                             <td class="text-nowrap">
@@ -180,8 +180,8 @@
                             <div class="row mt-3 text-center">
                                 <t t-foreach="range(3)" t-as="x">
                                     <div class="col-4 px-4">
-                                        <div style="border-bottom: 1px dotted black; height: 15px;"/>
-                                        <div style="border-bottom: 1px dotted black; height: 15px; margin-top: 15px;"/>
+                                        <div style="border-bottom: 1px dotted black; height: 22px;"/>
+                                        <div style="border-bottom: 1px dotted black; height: 22px; margin-top: 18px;"/>
                                     </div>
                                 </t>
                             </div>

@@ -94,7 +94,7 @@
                                             </td>
 
                                             <td class="text-nowrap">
-                                                <span t-field="journal.date" t-options="{'widget': 'date', 'format': 'dd/MM/yyyy'}"/>
+                                                <span t-esc="journal.date and journal.date.strftime('%d-%b-%Y') or ''"/>
                                             </td>
 
                                             <td class="text-nowrap">
@@ -187,16 +187,16 @@
 
                             <div class="row text-center" style="margin-top: 25px;">
                                 <div class="col-4 px-4">
-                                    <div style="border-bottom: 1px dotted black; height: 20px;"/>
-                                    <div style="border-bottom: 1px dotted black; height: 20px; margin-top: 20px;"/>
+                                    <div style="border-bottom: 1px dotted black; height: 24px;"/>
+                                    <div style="border-bottom: 1px dotted black; height: 24px; margin-top: 22px;"/>
                                 </div>
                                 <div class="col-4 px-4">
-                                    <div style="border-bottom: 1px dotted black; height: 20px;"/>
-                                    <div style="border-bottom: 1px dotted black; height: 20px; margin-top: 20px;"/>
+                                    <div style="border-bottom: 1px dotted black; height: 24px;"/>
+                                    <div style="border-bottom: 1px dotted black; height: 24px; margin-top: 22px;"/>
                                 </div>
                                 <div class="col-4 px-4">
-                                    <div style="border-bottom: 1px dotted black; height: 20px;"/>
-                                    <div style="border-bottom: 1px dotted black; height: 20px; margin-top: 20px;"/>
+                                    <div style="border-bottom: 1px dotted black; height: 24px;"/>
+                                    <div style="border-bottom: 1px dotted black; height: 24px; margin-top: 22px;"/>
                                 </div>
                             </div>
                         </div>
