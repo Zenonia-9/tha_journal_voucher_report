@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//button[@name='button_draft']" position="after">
                 <button name="action_open_journal_voucher_print_wizard"
-                        string="Print"
+                        string="Print Journal Items"
                         type="object"
                         class="btn btn-secondary"
                         invisible="move_type not in ('entry', 'out_invoice', 'in_invoice') or state != 'posted'"
