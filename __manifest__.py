@@ -11,6 +11,7 @@
     ],
     "data": [
         "security/ir.model.access.csv",
+        "data/report_attachment.xml",
         "report/paperformat.xml",
         "report/journal_voucher_layout.xml",
         "report/journal_voucher.xml",

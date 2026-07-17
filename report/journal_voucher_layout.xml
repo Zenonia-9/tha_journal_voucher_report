@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <template id="tpc_journal_voucher_header">
+        <t t-set="letterhead" t-value="o.env.ref('tha_journal_voucher_report.attachment_tpc_journal_voucher_header', raise_if_not_found=False)"/>
+        <img t-if="letterhead and letterhead.datas"
+             t-att-src="image_data_uri(letterhead.datas)"
+             style="display: block; width: 100%; height: auto;"
+             alt="TPC Header"/>
+    </template>
+
     <template id="journal_voucher_layout_a4">
         <t t-if="not o" t-set="o" t-value="doc"/>
 
@@ -16,81 +24,7 @@
         </t>
 
         <div t-attf-class="header o_company_#{company.id}_layout">
-            <style>
-                .journal-voucher-header {
-                    width: 100%;
-                    overflow: hidden;
-                }
-
-                .journal-voucher-logo-block {
-                    float: left;
-                    width: 45%;
-                    text-align: left;
-                }
-
-                .journal-voucher-address-block {
-                    float: right;
-                    width: 55%;
-                    text-align: right;
-                    font-size: 12px;
-                    line-height: 1.25;
-                    white-space: nowrap;
-                    padding-right: 6mm;
-                }
-
-                .journal-voucher-address-content {
-                    display: inline-block;
-                    text-align: left;
-                }
-
-                .journal-voucher-address-block div,
-                .journal-voucher-address-block span {
-                    white-space: nowrap !important;
-                }
-
-                .journal-voucher-logo {
-                    max-height: 80px;
-                }
-
-                .journal-voucher-clear {
-                    clear: both;
-                }
-            </style>
-
-            <t t-set="partner" t-value="company.partner_id"/>
-
-            <div class="journal-voucher-header">
-                <div class="journal-voucher-logo-block">
-                    <img t-if="company.logo"
-                         class="journal-voucher-logo"
-                         t-att-src="image_data_uri(company.logo)"
-                         alt="Logo"/>
-                </div>
-
-                <div class="journal-voucher-address-block">
-                    <div class="journal-voucher-address-content">
-                        <div t-if="company.name">
-                            <span t-esc="company.name"/>
-                        </div>
-                        <div t-if="partner.street">
-                            <span t-esc="partner.street"/>
-                        </div>
-                        <div t-if="partner.street2 or partner.zip or partner.city or partner.state_id or partner.country_id">
-                            <span t-if="partner.street2" t-esc="partner.street2"/>
-                            <span t-if="partner.street2 and (partner.zip or partner.city or partner.state_id or partner.country_id)">, </span>
-                            <span t-if="partner.zip" t-esc="partner.zip"/>
-                            <span t-if="partner.zip and (partner.city or partner.state_id or partner.country_id)">, </span>
-                            <span t-if="partner.city" t-esc="partner.city"/>
-                            <span t-if="partner.city and (partner.state_id or partner.country_id)">, </span>
-                            <span t-if="partner.state_id" t-esc="partner.state_id.name"/>
-                            <span t-if="partner.state_id and partner.country_id">, </span>
-                            <span t-if="partner.country_id" t-esc="partner.country_id.name"/>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="journal-voucher-clear"/>
-            </div>
+            <t t-call="tha_journal_voucher_report.tpc_journal_voucher_header"/>
         </div>
 
         <div t-attf-class="article o_report_layout_standard o_table_standard o_company_#{company.id}_layout"
@@ -121,81 +55,7 @@
         </t>
 
         <div t-attf-class="header o_company_#{company.id}_layout">
-            <style>
-                .journal-voucher-header {
-                    width: 100%;
-                    overflow: hidden;
-                }
-
-                .journal-voucher-logo-block {
-                    float: left;
-                    width: 45%;
-                    text-align: left;
-                }
-
-                .journal-voucher-address-block {
-                    float: right;
-                    width: 55%;
-                    text-align: right;
-                    font-size: 11px;
-                    line-height: 1.25;
-                    white-space: nowrap;
-                    padding-right: 6mm;
-                }
-
-                .journal-voucher-address-content {
-                    display: inline-block;
-                    text-align: left;
-                }
-
-                .journal-voucher-address-block div,
-                .journal-voucher-address-block span {
-                    white-space: nowrap !important;
-                }
-
-                .journal-voucher-logo {
-                    max-height: 80px;
-                }
-
-                .journal-voucher-clear {
-                    clear: both;
-                }
-            </style>
-
-            <t t-set="partner" t-value="company.partner_id"/>
-
-            <div class="journal-voucher-header">
-                <div class="journal-voucher-logo-block">
-                    <img t-if="company.logo"
-                         class="journal-voucher-logo"
-                         t-att-src="image_data_uri(company.logo)"
-                         alt="Logo"/>
-                </div>
-
-                <div class="journal-voucher-address-block">
-                    <div class="journal-voucher-address-content">
-                        <div t-if="company.name">
-                            <span t-esc="company.name"/>
-                        </div>
-                        <div t-if="partner.street">
-                            <span t-esc="partner.street"/>
-                        </div>
-                        <div t-if="partner.street2 or partner.zip or partner.city or partner.state_id or partner.country_id">
-                            <span t-if="partner.street2" t-esc="partner.street2"/>
-                            <span t-if="partner.street2 and (partner.zip or partner.city or partner.state_id or partner.country_id)">, </span>
-                            <span t-if="partner.zip" t-esc="partner.zip"/>
-                            <span t-if="partner.zip and (partner.city or partner.state_id or partner.country_id)">, </span>
-                            <span t-if="partner.city" t-esc="partner.city"/>
-                            <span t-if="partner.city and (partner.state_id or partner.country_id)">, </span>
-                            <span t-if="partner.state_id" t-esc="partner.state_id.name"/>
-                            <span t-if="partner.state_id and partner.country_id">, </span>
-                            <span t-if="partner.country_id" t-esc="partner.country_id.name"/>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="journal-voucher-clear"/>
-            </div>
+            <t t-call="tha_journal_voucher_report.tpc_journal_voucher_header"/>
         </div>
 
         <div t-attf-class="article o_report_layout_standard o_table_standard o_company_#{company.id}_layout"
