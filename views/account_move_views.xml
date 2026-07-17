@@ -10,7 +10,7 @@
                         string="Print"
                         type="object"
                         class="btn btn-secondary"
-                        invisible="move_type != 'entry' or state != 'posted'"
+                        invisible="move_type not in ('entry', 'out_invoice', 'in_invoice') or state != 'posted'"
                         groups="account.group_account_invoice"/>
             </xpath>
         </field>
@@ -28,7 +28,7 @@
                             type="object"
                             string="Print JV"
                             groups="account.group_account_invoice"
-                            invisible="context.get('default_move_type') != 'entry'"/>
+                            invisible="context.get('default_move_type') not in ('entry', 'out_invoice', 'in_invoice')"/>
                 </header>
             </xpath>
         </field>

@@ -5,11 +5,15 @@ from odoo.exceptions import UserError
 class AccountMove(models.Model):
     _inherit = "account.move"
 
+    _journal_voucher_move_types = ("entry", "out_invoice", "in_invoice")
+
     def _validate_journal_voucher_moves(self):
         if not self:
             raise UserError(_("No journal entries selected."))
-        if any(move.move_type != "entry" for move in self):
-            raise UserError(_("Journal vouchers can only be printed for journal entries."))
+        if any(move.move_type not in self._journal_voucher_move_types for move in self):
+            raise UserError(
+                _("Journal vouchers can only be printed for journal entries, invoices, and bills.")
+            )
         if any(move.state != "posted" for move in self):
             raise UserError(_("You can only print journal vouchers for posted entries."))
         if len(self.company_id) > 1:

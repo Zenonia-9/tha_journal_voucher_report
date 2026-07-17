@@ -14,8 +14,10 @@ def _get_journal_voucher_report_values(report_model, docids, data=None):
     # List-view printing sends all selected moves directly to this report.
     if not docs:
         raise UserError(_("Please select at least one journal entry to print."))
-    if any(move.move_type != "entry" for move in docs):
-        raise UserError(_("Print JV can only be used for journal entries."))
+    if any(move.move_type not in move._journal_voucher_move_types for move in docs):
+        raise UserError(
+            _("Print JV can only be used for journal entries, invoices, and bills.")
+        )
     if any(move.state != "posted" for move in docs):
         raise UserError(_("You can only print posted journal entries."))
 
